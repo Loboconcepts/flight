@@ -107,10 +107,9 @@
 			}
 
 
-			if (this.X + this.W < 0 | this.X > canvas.width |
-			this.Y + this.H < 0 | this.Y > canvas.height) {
-			delete stars[this.ID];
-			numStars--;
+			if (this.X + this.W < 0 | this.X > canvas.width + this.age | this.Y + this.H < 0 | this.Y > canvas.height + this.age) {
+				delete stars[this.ID];
+				numStars--;
 			}
 
 			// ctx.fillStyle = this.C;
@@ -118,7 +117,17 @@
 
 			ctx.beginPath();
 			ctx.fillStyle = this.C;
+			
 			ctx.arc(this.X, this.Y, this.W, 0,6.283);
+			if (this.age > 1000) {
+				// ctx.shadowColor = "#FFFF00" 
+				// ctx.shadowOffsetX = 0;
+				// ctx.shadowOffsetY = 0;
+				// ctx.shadowBlur = 1;
+				ctx.lineWidth=10;
+				ctx.strokeStyle='#FFFF00';
+		    	ctx.stroke();
+			}
 			ctx.fill();
 			ctx.closePath();
 		}
@@ -147,6 +156,7 @@
 		    	
 
 		    	ctx.beginPath();
+		    	ctx.lineWidth=1;
 		    	ctx.fillStyle = "rgba(0, 0, 0, .5)";
 	 			ctx.fillRect(0,0, canvas.width,canvas.height);
 		    	ctx.strokeStyle = '#ffffff';
