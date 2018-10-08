@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+      * {
+      color: #ffffff;
+      background-color: #000;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      }
+    </style>
+</head>
+<body>
+	<canvas id="canvas" width="400" height="300">
+    This text is displayed if your browser does not support HTML5 Canvas.
+   </canvas>
+
+	<script type="text/javascript">
+		var getUrlParameter = function getUrlParameter(sParam) {
+		  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+		    sURLVariables = sPageURL.split('&'),
+		    sParameterName,
+		    i;
+		    
+
+
+		  for (i = 0; i < sURLVariables.length; i++) {
+		    sParameterName = sURLVariables[i].split('=');
+		    console.log(sParam)
+
+		    if (sParameterName[0] === sParam) {
+		      return sParameterName[1] === undefined ? true : sParameterName[1];
+		    }
+		  }
+		};
+
+		var canvas = document.getElementById("canvas");
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;
+		function getMousePos(canvas, evt) {
+	        var rect = canvas.getBoundingClientRect();
+	        return {
+	          x: (evt.clientX),
+	          y: (evt.clientY)
+	        };
+	      };
+
+	    var ctx = canvas.getContext("2d");
+		var mousePos = {x:canvas.width/2,y:canvas.height/2};
+
+		
+		var i=0;
+		var stars = {};
+		var starIndex = 0;
+		var numStars = 0;
+		var acceleration = 1;
+		var starsToDraw = (canvas.width * canvas.height) / 5000;
+		if (getUrlParameter("stars")) {
+		  starsToDraw = getUrlParameter("stars");
+		}
+		if (getUrlParameter("accel")) {
+		  acceleration = getUrlParameter("accel");
+		}
+			
+		function Star() {
+			this.X = canvas.width/2;
+			this.Y = canvas.height/2;
+
+			this.SX = Math.random()*10-5;
+	  		this.SY = Math.random()*10-5;
+
+	  		var start = 0;
+
+			if (canvas.width > canvas.height)
+				start = canvas.width;
+			else
+				start = canvas.height;
+
+			this.X += this.SX * start / 10;
+			this.Y += this.SY * start / 10;
+			this.W = 1;
+			this.H = 1;
+
+			this.age = 0;
+			this.dies = 500;
+			starIndex++;
+			stars[starIndex] = this;
+
+			this.ID = starIndex;
+			this.C = "#ffffff";
+		};
+
+		Star.prototype.Draw = function () {
+			this.X += this.SX;
+			this.Y += this.SY;
+
+			this.SX += (this.SX-(canvas.width/2-mousePos.x)/50) / (50 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-mousePos.y)/50) / (50 / acceleration);
+
+			this.age++;
+
+			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration)) {
+			this.W++;
+			this.H++;
+			}
+
+			if (this.X + this.W < 0 | this.X > canvas.width |
+			this.Y + this.H < 0 | this.Y > canvas.height) {
+			delete stars[this.ID];
+			numStars--;
+			}
+
+			ctx.fillStyle = this.C;
+			ctx.fillRect(this.X, this.Y, this.W, this.H);
+		}
+
+		canvas.addEventListener('mousemove', function(evt) {
+	        mousePos = getMousePos(canvas, evt);
+	    }, false);
+		
+		var go = setInterval((function() {
+		    function game() {
+		    	
+		    	
+				
+
+				if (canvas.width != window.innerWidth)
+				    canvas.width = window.innerWidth;
+				if (canvas.height != window.innerHeight)
+					canvas.height = window.innerHeight;
+
+				
+
+
+
+
+
+		    	
+
+		    	ctx.beginPath();
+		    	ctx.fillStyle = "rgba(0, 0, 0, .5)";
+	 			ctx.fillRect(0,0, canvas.width,canvas.height);
+		    	ctx.strokeStyle = '#ffffff';
+				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.lineTo(0,canvas.height);
+				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.lineTo(0,0);
+				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.lineTo(canvas.width,canvas.height);
+				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.lineTo(canvas.width,0);
+				ctx.stroke();
+				for (var i = numStars; i < starsToDraw; i++) {
+					new Star();
+					numStars++;
+				}
+
+				for (var star in stars) {
+					stars[star].Draw();
+				}
+
+				
+
+				
+		    	ctx.closePath();
+
+		    	}
+
+
+		    
+		    return game;
+		}()), 15);
+
+	</script>
+
+</body>
+</html>
