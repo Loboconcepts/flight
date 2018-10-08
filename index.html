@@ -71,7 +71,7 @@
 			this.SX = Math.random()*10-5;
 	  		this.SY = Math.random()*10-5;
 
-	  		var start = 0;
+	  		var start = 1;
 
 			if (canvas.width > canvas.height)
 				start = canvas.width;
@@ -80,8 +80,8 @@
 
 			this.X += this.SX * start / 10;
 			this.Y += this.SY * start / 10;
-			this.W = 1;
-			this.H = 1;
+			this.W = 2;
+			this.H = 2;
 
 			this.age = 0;
 			this.dies = 500;
@@ -93,18 +93,19 @@
 		};
 
 		Star.prototype.Draw = function () {
-			this.X += this.SX;
-			this.Y += this.SY;
+			this.X += this.SX-(canvas.width/2-mousePos.x)/50;
+			this.Y += this.SY-(canvas.height/2-mousePos.y)/50;
 
 			this.SX += (this.SX-(canvas.width/2-mousePos.x)/50) / (50 / acceleration);
 			this.SY += (this.SY-(canvas.height/2-mousePos.y)/50) / (50 / acceleration);
 
 			this.age++;
 
-			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration)) {
+			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age == Math.floor(500 / acceleration) | this.age > 1000) {
 			this.W++;
 			this.H++;
 			}
+
 
 			if (this.X + this.W < 0 | this.X > canvas.width |
 			this.Y + this.H < 0 | this.Y > canvas.height) {
@@ -112,15 +113,21 @@
 			numStars--;
 			}
 
+			// ctx.fillStyle = this.C;
+			// ctx.fillRect(this.X, this.Y, this.W, this.H);
+
+			ctx.beginPath();
 			ctx.fillStyle = this.C;
-			ctx.fillRect(this.X, this.Y, this.W, this.H);
+			ctx.arc(this.X, this.Y, this.W, 0,6.283);
+			ctx.fill();
+			ctx.closePath();
 		}
 
 		canvas.addEventListener('mousemove', function(evt) {
 	        mousePos = getMousePos(canvas, evt);
 	    }, false);
 		
-		var go = setInterval((function() {
+		var go = setInterval(function() {
 		    function game() {
 		    	
 		    	
@@ -171,7 +178,7 @@
 
 		    
 		    return game;
-		}()), 15);
+		}(), 15);
 
 	</script>
 
