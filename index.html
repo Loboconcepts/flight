@@ -20,7 +20,6 @@
    </canvas>
 
 	<script type="text/javascript">
-		var initialOffset = null;
 		var getUrlParameter = function getUrlParameter(sParam) {
 		  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 		    sURLVariables = sPageURL.split('&'),
@@ -52,16 +51,8 @@
 	      };
 
 	    function handleOrientation(evt) {
-	    	if(initialOffset === null && evt.absolute !== true && +evt.webkitCompassAccuracy > 0 && +evt.webkitCompassAccuracy < 50) {
-	    		initialOffset = evt.webkitCompassHeading || 0;
-			}
 
-			var alpha = evt.alpha - initialOffset;
-			if(alpha < 0) {
-				alpha += 360;
-			}
-
-	    	let x = alpha;
+	    	let x = evt.gamma;
 	    	let y = evt.beta;
 
 	    	if (x >  90) { x =  90};
