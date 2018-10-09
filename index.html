@@ -52,8 +52,8 @@
 
 	    function handleOrientation(evt) {
 			return {
-	          x: Math.floor((evt.rotationRate.x)+(canvas.width/2)),
-	          y: Math.floor((evt.rotationRate.y)+(canvas.height/2))
+	          x: Math.floor(evt.rotationRate.y),
+	          y: Math.floor(evt.rotationRate.x)
 	        };
 		};
 
@@ -212,7 +212,6 @@
 	    }, false);
 
 	    window.addEventListener('devicemotion', function(evt) {
-	    	console.log(handleOrientation(evt));
 	    	targetPos = handleOrientation(evt);
 	    	document.getElementById('debugInfo').innerHTML = "x: " + handleOrientation(evt).x + " y: " + handleOrientation(evt).y;
 
