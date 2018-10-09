@@ -133,15 +133,15 @@
 		};
 
 		Star.prototype.Draw = function () {
-			this.X += this.SX-(canvas.width/2-mousePos.x)/50;
-			this.Y += this.SY-(canvas.height/2-mousePos.y)/50;
+			this.X += this.SX-(canvas.width/2-mousePos.x)/40;
+			this.Y += this.SY-(canvas.height/2-mousePos.y)/40;
 
-			this.SX += (this.SX-(canvas.width/2-mousePos.x)/50) / (50 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-mousePos.y)/50) / (50 / acceleration);
+			this.SX += (this.SX-(canvas.width/2-mousePos.x)/40) / (50 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-mousePos.y)/40) / (50 / acceleration);
 
 			this.age++;
 
-			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age == Math.floor(500 / acceleration) | this.age > 1000) {
+			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age == Math.floor(500 / acceleration) | this.age == Math.floor(750 / acceleration) | this.age > 1000) {
 			this.W++;
 			this.H++;
 			}
@@ -178,7 +178,7 @@
 
 			this.age++;
 
-			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age > Math.floor(500 / acceleration)) {
+			if (this.age == Math.floor(20 / acceleration) | this.age == Math.floor(50 / acceleration) | this.age == Math.floor(100 / acceleration) | this.age > Math.floor(200 / acceleration)) {
 			this.W++;
 			this.H++;
 			}
