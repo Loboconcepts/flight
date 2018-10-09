@@ -60,8 +60,8 @@
   			if (y >  180) { y =  180};
   			if (y < 0) { y = 0};
 			return {
-	          x: Math.floor((x*2)+(canvas.width/2)),
-	          y: Math.floor((y*2)+(canvas.height/2))
+	          x: Math.floor((x*4)+(canvas.width/2)),
+	          y: Math.floor(((y-90)*4)+(canvas.height/2))
 	        };
 		};
 
