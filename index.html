@@ -120,16 +120,20 @@
 			
 			ctx.arc(this.X, this.Y, this.W, 0,6.283);
 			if (this.age > 1000) {
-				// ctx.shadowColor = "#FFFF00" 
-				// ctx.shadowOffsetX = 0;
-				// ctx.shadowOffsetY = 0;
-				// ctx.shadowBlur = 1;
 				ctx.lineWidth=10;
 				ctx.strokeStyle='#FFFF00';
 		    	ctx.stroke();
 			}
 			ctx.fill();
 			ctx.closePath();
+
+			// if (this.age > 1200) {
+			// 	ctx.beginPath();
+			// 	ctx.fillStyle = '#0000FF';
+			// 	ctx.arc(this.X+20, this.Y, this.W/100, 0,6.283);
+			// 	ctx.fill();
+			// 	ctx.closePath();
+			// }
 		}
 
 		canvas.addEventListener('mousemove', function(evt) {
@@ -153,13 +157,12 @@
 
 
 
-		    	
-
-		    	ctx.beginPath();
-		    	ctx.lineWidth=1;
 		    	ctx.fillStyle = "rgba(0, 0, 0, .5)";
-	 			ctx.fillRect(0,0, canvas.width,canvas.height);
-		    	ctx.strokeStyle = '#ffffff';
+				ctx.fillRect(0,0, canvas.width,canvas.height);
+
+				ctx.beginPath();
+				ctx.lineWidth=1;
+				ctx.strokeStyle = '#ffffff';
 				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
 				ctx.lineTo(0,canvas.height);
 				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
@@ -169,6 +172,7 @@
 				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
 				ctx.lineTo(canvas.width,0);
 				ctx.stroke();
+				
 				for (var i = numStars; i < starsToDraw; i++) {
 					new Star();
 					numStars++;
