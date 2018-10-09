@@ -54,14 +54,26 @@
 		var i=0;
 		var stars = {};
 		var starIndex = 0;
+		var planets = {};
+		var planetIndex = 0;
 		var numStars = 0;
+		var numPlanets = 0;
 		var acceleration = 1;
 		var starsToDraw = (canvas.width * canvas.height) / 5000;
+		var planetsToDraw = false;
 		if (getUrlParameter("stars")) {
 		  starsToDraw = getUrlParameter("stars");
 		}
 		if (getUrlParameter("accel")) {
 		  acceleration = getUrlParameter("accel");
+		}
+
+		function randomColor() {
+			var colorArray = ["#"];
+			for (let i=0;i<6;i++) {
+				colorArray.push(Math.floor(Math.random() * 16).toString(16));
+			}
+			return colorArray.join('');
 		}
 			
 		function Star() {
@@ -92,6 +104,34 @@
 			this.C = "#ffffff";
 		};
 
+		function Planet() {
+			this.X = canvas.width/2;
+			this.Y = canvas.height/2;
+
+			this.SX = Math.random()*10-5;
+	  		this.SY = Math.random()*10-5;
+
+	  		var start = 1;
+
+			if (canvas.width > canvas.height)
+				start = canvas.width;
+			else
+				start = canvas.height;
+
+			this.X += this.SX * start / 4;
+			this.Y += this.SY * start / 4;
+			this.W = 2;
+			this.H = 2;
+
+			this.age = 0;
+			this.dies = 500;
+			planetIndex++;
+			planets[planetIndex] = this;
+
+			this.ID = planetIndex;
+			this.C = randomColor();
+		};
+
 		Star.prototype.Draw = function () {
 			this.X += this.SX-(canvas.width/2-mousePos.x)/50;
 			this.Y += this.SY-(canvas.height/2-mousePos.y)/50;
@@ -114,6 +154,7 @@
 
 			// ctx.fillStyle = this.C;
 			// ctx.fillRect(this.X, this.Y, this.W, this.H);
+			if (this.age > 1000 && this.age < 1025) {planetsToDraw = 5;};
 
 			ctx.beginPath();
 			ctx.fillStyle = this.C;
@@ -126,14 +167,34 @@
 			}
 			ctx.fill();
 			ctx.closePath();
+		}
 
-			// if (this.age > 1200) {
-			// 	ctx.beginPath();
-			// 	ctx.fillStyle = '#0000FF';
-			// 	ctx.arc(this.X+20, this.Y, this.W/100, 0,6.283);
-			// 	ctx.fill();
-			// 	ctx.closePath();
-			// }
+		Planet.prototype.Draw = function () {
+			this.X += this.SX-(canvas.width/2-mousePos.x)/50;
+			this.Y += this.SY-(canvas.height/2-mousePos.y)/50;
+
+			this.SX += (this.SX-(canvas.width/2-mousePos.x)/50) / (50 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-mousePos.y)/50) / (50 / acceleration);
+
+			this.age++;
+
+			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age > Math.floor(500 / acceleration)) {
+			this.W++;
+			this.H++;
+			}
+
+
+			if (this.X + this.W < 0 | this.X > canvas.width + this.age | this.Y + this.H < 0 | this.Y > canvas.height + this.age) {
+				delete planets[this.ID];
+				numPlanets--;
+			}
+
+			ctx.beginPath();
+			ctx.fillStyle = this.C;
+			
+			ctx.arc(this.X, this.Y, this.W, 0,6.283);
+			ctx.fill();
+			ctx.closePath();
 		}
 
 		canvas.addEventListener('mousemove', function(evt) {
@@ -180,6 +241,20 @@
 
 				for (var star in stars) {
 					stars[star].Draw();
+				}
+
+				if (planetsToDraw) {
+					
+					for (var i = numPlanets; i < planetsToDraw; i++) {
+						new Planet();
+						planetsToDraw--;
+						numPlanets++;
+					}
+
+					for (var planet in planets) {
+						planets[planet].Draw();
+					}
+
 				}
 
 				
