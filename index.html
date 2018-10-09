@@ -51,9 +51,16 @@
 	      };
 
 	    function handleOrientation(evt) {
+	    	let x = evt.alpha;
+	    	let y = evt.beta;
+
+	    	if (x >  90) { x =  90};
+  			if (x < -90) { x = -90};
+  			if (y >  180) { y =  180};
+  			if (y < 0) { y = 0};
 			return {
-	          x: Math.floor(evt.rotationRate.x+canvas.width/2),
-	          y: Math.floor(evt.rotationRate.y+canvas.height/2)
+	          x: Math.floor((x)+(canvas.width/2)),
+	          y: Math.floor((y)+(canvas.height/2))
 	        };
 		};
 
@@ -211,7 +218,7 @@
 	        targetPos = getMousePos(canvas, evt);
 	    }, false);
 
-	    window.addEventListener('devicemotion', function(evt) {
+	    window.addEventListener('deviceorientation', function(evt) {
 	    	targetPos = handleOrientation(evt);
 	    	document.getElementById('debugInfo').innerHTML = "x: " + handleOrientation(evt).x + " y: " + handleOrientation(evt).y;
 
