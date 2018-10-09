@@ -52,8 +52,8 @@
 
 	    function handleOrientation(evt) {
 			return {
-	          x: Math.floor((evt.alpha*2)+(canvas.width/2)),
-	          y: Math.floor((evt.beta*2)+(canvas.height/2))
+	          x: Math.floor((evt.rotationRate.alpha*2)+(canvas.width/2)),
+	          y: Math.floor((evt.rotationRate.beta*2)+(canvas.height/2))
 	        };
 		};
 
