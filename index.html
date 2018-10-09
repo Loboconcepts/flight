@@ -39,16 +39,24 @@
 		var canvas = document.getElementById("canvas");
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
+
 		function getMousePos(canvas, evt) {
 	        var rect = canvas.getBoundingClientRect();
 	        return {
-	          x: (evt.clientX),
-	          y: (evt.clientY)
+	          x: evt.clientX,
+	          y: evt.clientY
 	        };
 	      };
 
+	    function handleOrientation(evt) {
+			return {
+	          x: (evt.alpha*2)+(canvas.width/2),
+	          y: (evt.beta*2)+(canvas.height/2)
+	        };
+		};
+
 	    var ctx = canvas.getContext("2d");
-		var mousePos = {x:canvas.width/2,y:canvas.height/2};
+		var targetPos = {x:canvas.width/2,y:canvas.height/2};
 
 		
 		var i=0;
@@ -133,11 +141,11 @@
 		};
 
 		Star.prototype.Draw = function () {
-			this.X += this.SX-(canvas.width/2-mousePos.x)/40;
-			this.Y += this.SY-(canvas.height/2-mousePos.y)/40;
+			this.X += this.SX-(canvas.width/2-targetPos.x)/40;
+			this.Y += this.SY-(canvas.height/2-targetPos.y)/40;
 
-			this.SX += (this.SX-(canvas.width/2-mousePos.x)/40) / (50 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-mousePos.y)/40) / (50 / acceleration);
+			this.SX += (this.SX-(canvas.width/2-targetPos.x)/40) / (50 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-targetPos.y)/40) / (50 / acceleration);
 
 			this.age++;
 
@@ -170,11 +178,11 @@
 		}
 
 		Planet.prototype.Draw = function () {
-			this.X += this.SX-(canvas.width/2-mousePos.x)/50;
-			this.Y += this.SY-(canvas.height/2-mousePos.y)/50;
+			this.X += this.SX-(canvas.width/2-targetPos.x)/50;
+			this.Y += this.SY-(canvas.height/2-targetPos.y)/50;
 
-			this.SX += (this.SX-(canvas.width/2-mousePos.x)/50) / (50 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-mousePos.y)/50) / (50 / acceleration);
+			this.SX += (this.SX-(canvas.width/2-targetPos.x)/50) / (50 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-targetPos.y)/50) / (50 / acceleration);
 
 			this.age++;
 
@@ -198,7 +206,14 @@
 		}
 
 		canvas.addEventListener('mousemove', function(evt) {
-	        mousePos = getMousePos(canvas, evt);
+	        targetPos = getMousePos(canvas, evt);
+	    }, false);
+
+	    window.addEventListener('deviceorientation', function(evt) {
+	    	console.log(handleOrientation(evt));
+	    	targetPos = handleOrientation(evt);
+
+
 	    }, false);
 		
 		var go = setInterval(function() {
@@ -224,13 +239,13 @@
 				ctx.beginPath();
 				ctx.lineWidth=1;
 				ctx.strokeStyle = '#ffffff';
-				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
 				ctx.lineTo(0,canvas.height);
-				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
 				ctx.lineTo(0,0);
-				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
 				ctx.lineTo(canvas.width,canvas.height);
-				ctx.moveTo(canvas.width-mousePos.x,canvas.height-mousePos.y);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
 				ctx.lineTo(canvas.width,0);
 				ctx.stroke();
 				
