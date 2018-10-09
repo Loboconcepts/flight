@@ -211,7 +211,7 @@
 	        targetPos = getMousePos(canvas, evt);
 	    }, false);
 
-	    window.addEventListener('deviceorientation', function(evt) {
+	    window.addEventListener('devicemotion', function(evt) {
 	    	console.log(handleOrientation(evt));
 	    	targetPos = handleOrientation(evt);
 	    	document.getElementById('debugInfo').innerHTML = "x: " + handleOrientation(evt).x + " y: " + handleOrientation(evt).y;
