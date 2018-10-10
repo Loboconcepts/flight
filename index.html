@@ -69,12 +69,13 @@
 		var starsToDraw = (canvas.width * canvas.height) / 5000;
 		var planetsToDraw = false;
 		var cloudsToDraw = 0;
-		var backgroundColor = "0,0,0"
+		var backgroundColor = "0,0,0";
+		var onPlanet = false;
 
 		function randomColor() {
 			var colorArray = [];
 			for (let i=0;i<3;i++) {
-				colorArray.push(Math.floor(Math.random() * 255));
+				colorArray.push(155+(Math.floor(Math.random() * 100)));
 			}
 			return colorArray.join(',');
 		}
@@ -190,6 +191,7 @@
 			}
 
 			if (this.age == 600) {
+				onPlanet=true;
 				backgroundColor = this.C;
 				starsToDraw = 0;
 				cloudsToDraw = (canvas.width * canvas.height) / 5000;
@@ -202,13 +204,14 @@
 			ctx.fill();
 			ctx.closePath();
 		};
+		var cloudHeight = 0;
 
 		function Cloud() {
 			this.X = canvas.width/2;
-			this.Y = canvas.height/4;
+			this.Y = canvas.height/2;
 
 			this.SX = Math.random()*10-5;
-	  		this.SY = Math.random()*10-10;
+	  		this.SY = cloudHeight;
 
 	  		var start = 1;
 
@@ -274,6 +277,10 @@
 				    canvas.width = window.innerWidth;
 				if (canvas.height != window.innerHeight)
 					canvas.height = window.innerHeight;
+
+				if (onPlanet) {
+					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/100
+				}
 
 
 		    	ctx.fillStyle = "rgba("+ backgroundColor + ",.5)";
