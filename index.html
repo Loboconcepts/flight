@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></div>
+	<div style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.01 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -28,7 +28,7 @@
 		}
 		window.addEventListener('deviceorientation', deviceOrientation, false);
 
-		window.addEventListener("touchstart", window.addEventListener('deviceorientation', deviceOrientation, false), false);
+		
 
 		var canvas = document.getElementById("canvas");
 		canvas.width = window.innerWidth;
@@ -48,8 +48,8 @@
 	    	let y = evt.beta - origOrientation[0];
 
 			return {
-	          x: Math.floor((x*6)+(canvas.width/2)),
-	          y: Math.floor((y*10)+(canvas.height/2))
+				x: Math.floor((x*6)+(canvas.width/2)),
+				y: Math.floor((y*10)+(canvas.height/2))
 	        };
 		};
 
@@ -352,6 +352,7 @@
 	    }, false);
 
 	    window.addEventListener('deviceorientation', function(evt) {
+	    	window.addEventListener("touchstart", origOrientation = [evt.gamma,evt.beta], false);
 	    	targetPos = handleOrientation(evt);
 	    	document.getElementById('debugInfo').innerHTML = "x: " + handleOrientation(evt).x + " y: " + handleOrientation(evt).y;
 	    }, false);
