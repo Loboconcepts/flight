@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.012 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.013 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -33,7 +33,7 @@
 		
 		resetOrientation();
 
-		window.addEventListener('clickup',function(evt) {
+		window.addEventListener('mouseup',function(evt) {
 			evt.preventDefault();
 			resetOrientation();
 		}, false); 
