@@ -28,25 +28,6 @@
 		}
 		window.addEventListener('deviceorientation', deviceOrientation);
 
-
-		var getUrlParameter = function getUrlParameter(sParam) {
-		  var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-		    sURLVariables = sPageURL.split('&'),
-		    sParameterName,
-		    i;
-		    
-
-
-		  for (i = 0; i < sURLVariables.length; i++) {
-		    sParameterName = sURLVariables[i].split('=');
-		    console.log(sParam)
-
-		    if (sParameterName[0] === sParam) {
-		      return sParameterName[1] === undefined ? true : sParameterName[1];
-		    }
-		  }
-		};
-
 		var canvas = document.getElementById("canvas");
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
@@ -79,24 +60,23 @@
 		var starIndex = 0;
 		var planets = {};
 		var planetIndex = 0;
+		var clouds = {};
+		var cloudIndex = 0;
 		var numStars = 0;
 		var numPlanets = 0;
+		var numClouds = 0;
 		var acceleration = 1;
 		var starsToDraw = (canvas.width * canvas.height) / 5000;
 		var planetsToDraw = false;
-		if (getUrlParameter("stars")) {
-		  starsToDraw = getUrlParameter("stars");
-		}
-		if (getUrlParameter("accel")) {
-		  acceleration = getUrlParameter("accel");
-		}
+		var cloudsToDraw = 0;
+		var backgroundColor = "0,0,0"
 
 		function randomColor() {
-			var colorArray = ["#"];
-			for (let i=0;i<6;i++) {
-				colorArray.push(Math.floor(Math.random() * 16).toString(16));
+			var colorArray = [];
+			for (let i=0;i<3;i++) {
+				colorArray.push(Math.floor(Math.random() * 255));
 			}
-			return colorArray.join('');
+			return colorArray.join(',');
 		}
 			
 		function Star() {
@@ -126,35 +106,6 @@
 			this.ID = starIndex;
 			this.C = "#ffffff";
 		};
-
-		function Planet() {
-			this.X = canvas.width/2;
-			this.Y = canvas.height/2;
-
-			this.SX = Math.random()*10-5;
-	  		this.SY = Math.random()*10-5;
-
-	  		var start = 1;
-
-			if (canvas.width > canvas.height)
-				start = canvas.width;
-			else
-				start = canvas.height;
-
-			this.X += this.SX * start / 4;
-			this.Y += this.SY * start / 4;
-			this.W = 2;
-			this.H = 2;
-
-			this.age = 0;
-			this.dies = 500;
-			planetIndex++;
-			planets[planetIndex] = this;
-
-			this.ID = planetIndex;
-			this.C = randomColor();
-		};
-
 		Star.prototype.Draw = function () {
 			this.X += this.SX-(canvas.width/2-targetPos.x)/40;
 			this.Y += this.SY-(canvas.height/2-targetPos.y)/40;
@@ -191,7 +142,33 @@
 			ctx.fill();
 			ctx.closePath();
 		}
+		function Planet() {
+			this.X = canvas.width/2;
+			this.Y = canvas.height/2;
 
+			this.SX = Math.random()*10-5;
+	  		this.SY = Math.random()*10-5;
+
+	  		var start = 1;
+
+			if (canvas.width > canvas.height)
+				start = canvas.width;
+			else
+				start = canvas.height;
+
+			this.X += this.SX * start / 4;
+			this.Y += this.SY * start / 4;
+			this.W = 2;
+			this.H = 2;
+
+			this.age = 0;
+			this.dies = 500;
+			planetIndex++;
+			planets[planetIndex] = this;
+
+			this.ID = planetIndex;
+			this.C = randomColor();
+		};
 		Planet.prototype.Draw = function () {
 			this.X += this.SX-(canvas.width/2-targetPos.x)/50;
 			this.Y += this.SY-(canvas.height/2-targetPos.y)/50;
@@ -212,13 +189,74 @@
 				numPlanets--;
 			}
 
+			if (this.age == 600) {
+				backgroundColor = this.C;
+				starsToDraw = 0;
+				cloudsToDraw = (canvas.width * canvas.height) / 5000;
+			}
+
 			ctx.beginPath();
-			ctx.fillStyle = this.C;
+			ctx.fillStyle = "rgba("+this.C+ ",1)";
 			
 			ctx.arc(this.X, this.Y, this.W, 0,6.283);
 			ctx.fill();
 			ctx.closePath();
-		}
+		};
+
+		function Cloud() {
+			this.X = canvas.width/2;
+			this.Y = canvas.height/4;
+
+			this.SX = Math.random()*10-5;
+	  		this.SY = Math.random()*10-10;
+
+	  		var start = 1;
+
+			if (canvas.width > canvas.height)
+				start = canvas.width;
+			else
+				start = canvas.height;
+
+			this.X += this.SX * start / 4;
+			this.Y += this.SY * start / 4;
+			this.W = 2;
+			this.H = 2;
+
+			this.age = 0;
+			this.dies = 500;
+			cloudIndex++;
+			clouds[cloudIndex] = this;
+
+			this.ID = cloudIndex;
+			this.C = "255,255,255";
+		};
+		Cloud.prototype.Draw = function () {
+			this.X += this.SX-(canvas.width/2-targetPos.x)/50;
+			this.Y += this.SY-(canvas.height/2-targetPos.y)/50;
+
+			this.SX += (this.SX-(canvas.width/2-targetPos.x)/50) / (100 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-targetPos.y)/50) / (100 / acceleration);
+
+			this.age++;
+
+			if (this.age%3==0) {
+				this.W++;
+				this.H++;
+			}
+
+			if (this.X + this.W < 0 | this.X > canvas.width + this.age | this.Y + this.H < 0 | this.Y > canvas.height + this.age) {
+				delete clouds[this.ID];
+				numClouds--;
+			}
+
+			ctx.beginPath();
+			ctx.fillStyle = "rgba("+this.C+ ",.9)";
+			
+			ctx.arc(this.X, this.Y, this.W, 0,6.283);
+			ctx.fill();
+			ctx.closePath();
+		};
+
 
 		canvas.addEventListener('mousemove', function(evt) {
 	        targetPos = getMousePos(canvas, evt);
@@ -230,37 +268,18 @@
 	    }, false);
 		
 		var go = setInterval(function() {
-		    function game() {
-		    	
-		    	
-				
+		    function game() {				
 
 				if (canvas.width != window.innerWidth)
 				    canvas.width = window.innerWidth;
 				if (canvas.height != window.innerHeight)
 					canvas.height = window.innerHeight;
 
-				
 
-
-
-
-
-		    	ctx.fillStyle = "rgba(0, 0, 0, .5)";
+		    	ctx.fillStyle = "rgba("+ backgroundColor + ",.5)";
 				ctx.fillRect(0,0, canvas.width,canvas.height);
 
-				ctx.beginPath();
-				ctx.lineWidth=1;
-				ctx.strokeStyle = '#ffffff';
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(0,canvas.height);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(0,0);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(canvas.width,canvas.height);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(canvas.width,0);
-				ctx.stroke();
+				
 				
 				for (var i = numStars; i < starsToDraw; i++) {
 					new Star();
@@ -282,15 +301,34 @@
 					for (var planet in planets) {
 						planets[planet].Draw();
 					}
-
 				}
 
+				for (var i = numClouds; i < cloudsToDraw; i++) {
+					new Cloud();
+					numClouds++;
+				}
+
+				for (var cloud in clouds) {
+					clouds[cloud].Draw();
+				}
 				
 
-				
+				ctx.beginPath();
+				ctx.lineWidth=1;
+				ctx.strokeStyle = '#ffffff';
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				ctx.lineTo(0,canvas.height);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				ctx.lineTo(0,0);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				ctx.lineTo(canvas.width,canvas.height);
+				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				ctx.lineTo(canvas.width,0);
+				ctx.stroke();
+
 		    	ctx.closePath();
 
-		    	}
+		    }
 
 
 		    
