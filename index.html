@@ -28,7 +28,7 @@
 		}
 		window.addEventListener('deviceorientation', deviceOrientation, false);
 
-		window.addEventListener("touchstart", deviceorientation, false);
+		window.addEventListener("touchstart", window.addEventListener('deviceorientation', deviceOrientation, false), false);
 
 		var canvas = document.getElementById("canvas");
 		canvas.width = window.innerWidth;
