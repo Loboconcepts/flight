@@ -24,9 +24,11 @@
 		var origOrientation = [];
 		function deviceOrientation(evt) {
 			origOrientation = [evt.beta,evt.gamma];
-			window.removeEventListener('deviceorientation', deviceOrientation);
+			window.removeEventListener('deviceorientation', deviceOrientation, false);
 		}
-		window.addEventListener('deviceorientation', deviceOrientation);
+		window.addEventListener('deviceorientation', deviceOrientation, false);
+
+		window.addEventListener("touchstart", deviceorientation, false);
 
 		var canvas = document.getElementById("canvas");
 		canvas.width = window.innerWidth;
