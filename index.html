@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.018 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.019 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -218,18 +218,18 @@
 
 			if (this.age == 450) {
 				randomClouds = true;
-				inAtmosphere = true;
 				cloudsToDraw = (canvas.width * canvas.height) / 5000;
 			}		
 
 			if (this.age == 600) {
 				randomClouds = false;
-				inAtmosphere = false;
 				delete planets[this.ID];
 				numPlanets--;
 				onPlanet=true;
 				backgroundColor = this.C;
 				starsToDraw = 0;
+				stars = {};
+				numStars = 0;
 			}
 
 			ctx.beginPath();
@@ -420,7 +420,7 @@
 					
 					
 					ctx.fillStyle = "rgba(155,155,255,1)";
-					ctx.fillRect(0,((cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration))-(canvas.height/2 + 20), canvas.width,canvas.height-20);
+					ctx.fillRect(0,((cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration))-(canvas.height/2 + 20), canvas.width,canvas.height+40);
 
 					if (cloudHeight > 1.8) {
 						backgroundColor = "0,0,0";
@@ -429,7 +429,6 @@
 
 					if (cloudHeight > 6.5) {
 						onPlanet = false;
-						backgroundColor = "0,0,0";
 						cloudHeight = -2.5;
 					};
 					
