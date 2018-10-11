@@ -163,8 +163,8 @@
 			this.X = canvas.width/2;
 			this.Y = canvas.height/2;
 
-			this.SX = Math.random()*10-5;
-	  		this.SY = Math.random()*10-5;
+			this.SX = Math.random()*2-.5;
+	  		this.SY = Math.random()*2-.5;
 
 	  		var start = 1;
 
@@ -231,7 +231,7 @@
 			this.Y = canvas.height/2;
 
 			this.SX = Math.random()*10-5;
-			if (cloudHeight > .5 || cloudHeight < -.5) {
+			if (cloudHeight > .1 || cloudHeight < -.1) {
 				this.SY = cloudHeight;	
 			}
 			else {
@@ -387,18 +387,13 @@
 				ctx.fillRect(0,0, canvas.width,canvas.height);
 
 				if (onPlanet == true) {
-					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/200
+					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
 					if (cloudHeight < -2) {cloudHeight = -2};
-					if (cloudHeight > 2) {
+					if (cloudHeight > .2) {
 						ctx.fillStyle = "rgba(0,0,0,1)";
-						ctx.fillRect(0,0, canvas.width,((cloudHeight-2)*10)-8);
+						ctx.fillRect(0,0, canvas.width,((cloudHeight-.2)*20)-8);
 					};
-				}
-
-
-		    	
-
-				
+				};
 				
 				for (var i = numStars; i < starsToDraw; i++) {
 					new Star();
