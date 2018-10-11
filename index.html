@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.015 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.016 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -401,7 +401,7 @@
 					if (cloudHeight > 2) {cloudHeight = 2};
 					
 						ctx.fillStyle = "rgba(155,155,255,1)";
-						ctx.fillRect(0,0, canvas.width,((canvas.height/2 + 20) + (cloudHeight*100)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration)));
+						ctx.fillRect(0,0, canvas.width,((canvas.height/2 + 20) + (cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration)));
 					
 				};
 				
