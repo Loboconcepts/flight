@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.016 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.018 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -125,13 +125,21 @@
 			this.C = "#ffffff";
 		};
 		Star.prototype.Draw = function () {
-			this.X += this.SX-(canvas.width/2-targetPos.x)/40;
-			this.Y += this.SY-(canvas.height/2-targetPos.y)/40;
+			if (!onPlanet) {
+				this.X += this.SX-(canvas.width/2-targetPos.x)/40;
+				this.Y += this.SY-(canvas.height/2-targetPos.y)/40;
+				this.age++;
+			}
+			else {
+				this.X += (canvas.width/2-targetPos.x)/40;
+				this.Y += 0;
+			}
+			
 
 			this.SX += (this.SX-(canvas.width/2-targetPos.x)/40) / (100 / acceleration);
 			this.SY += (this.SY-(canvas.height/2-targetPos.y)/40) / (100 / acceleration);
 
-			this.age++;
+
 
 			if (this.age == Math.floor(50 / acceleration) | this.age == Math.floor(150 / acceleration) | this.age == Math.floor(300 / acceleration) | this.age == Math.floor(500 / acceleration) | this.age == Math.floor(750 / acceleration) | this.age > 1000) {
 			this.W++;
@@ -164,8 +172,8 @@
 			this.X = canvas.width/2;
 			this.Y = canvas.height/2;
 
-			this.SX = Math.random()*2-.5;
-	  		this.SY = Math.random()*2-.5;
+			this.SX = Math.random()*2-1;
+	  		this.SY = Math.random()*2-1;
 
 	  		var start = 1;
 
@@ -395,15 +403,7 @@
 				ctx.fillRect(0,0, canvas.width,canvas.height);
 				ctx.closePath();
 
-				if (onPlanet == true) {
-					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
-					if (cloudHeight < -2.5) {cloudHeight = -2.5};
-					if (cloudHeight > 2) {cloudHeight = 2};
-					
-						ctx.fillStyle = "rgba(155,155,255,1)";
-						ctx.fillRect(0,0, canvas.width,((canvas.height/2 + 20) + (cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration)));
-					
-				};
+				
 				
 				for (var i = numStars; i < starsToDraw; i++) {
 					new Star();
@@ -413,6 +413,27 @@
 				for (var star in stars) {
 					stars[star].Draw();
 				}
+
+				if (onPlanet == true) {
+					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
+					if (cloudHeight < -2.5) {cloudHeight = -2.5};
+					
+					
+					ctx.fillStyle = "rgba(155,155,255,1)";
+					ctx.fillRect(0,((cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration))-(canvas.height/2 + 20), canvas.width,canvas.height-20);
+
+					if (cloudHeight > 1.8) {
+						backgroundColor = "0,0,0";
+						starsToDraw = (canvas.width * canvas.height) / 5000;
+					};
+
+					if (cloudHeight > 6.5) {
+						onPlanet = false;
+						backgroundColor = "0,0,0";
+						cloudHeight = -2.5;
+					};
+					
+				};
 
 				if (planetsToDraw) {
 					
