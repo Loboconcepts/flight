@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.014 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.015 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -87,6 +87,7 @@
 		var groundsToDraw = 0;
 		var backgroundColor = "0,0,0";
 		var onPlanet = false;
+		var inAtmosphere = false;
 
 		function randomColor() {
 			var colorArray = [];
@@ -127,8 +128,8 @@
 			this.X += this.SX-(canvas.width/2-targetPos.x)/40;
 			this.Y += this.SY-(canvas.height/2-targetPos.y)/40;
 
-			this.SX += (this.SX-(canvas.width/2-targetPos.x)/40) / (50 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-targetPos.y)/40) / (50 / acceleration);
+			this.SX += (this.SX-(canvas.width/2-targetPos.x)/40) / (100 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-targetPos.y)/40) / (100 / acceleration);
 
 			this.age++;
 
@@ -175,8 +176,8 @@
 
 			this.X += this.SX * start / 4;
 			this.Y += this.SY * start / 4;
-			this.W = 2;
-			this.H = 2;
+			this.W = 4;
+			this.H = 4;
 
 			this.age = 0;
 			this.dies = 500;
@@ -208,10 +209,16 @@
 			}
 
 			if (this.age == 450) {
+				randomClouds = true;
+				inAtmosphere = true;
 				cloudsToDraw = (canvas.width * canvas.height) / 5000;
 			}		
 
 			if (this.age == 600) {
+				randomClouds = false;
+				inAtmosphere = false;
+				delete planets[this.ID];
+				numPlanets--;
 				onPlanet=true;
 				backgroundColor = this.C;
 				starsToDraw = 0;
@@ -219,20 +226,21 @@
 
 			ctx.beginPath();
 			ctx.fillStyle = "rgba("+this.C+ ",1)";
-			
 			ctx.arc(this.X, this.Y, this.W, 0,6.283);
 			ctx.fill();
 			ctx.closePath();
 		};
 		
-		var cloudHeight = 0;
+		var cloudHeight = -2.5;
+		var randomClouds = true;
 		function Cloud() {
 			this.X = canvas.width/2;
 			this.Y = canvas.height/2;
 
 			this.SX = Math.random()*10-5;
-			if (cloudHeight > .1 || cloudHeight < -.1) {
-				this.SY = cloudHeight;	
+			this.SY = cloudHeight;
+			if (!randomClouds) {
+				this.SY = cloudHeight;
 			}
 			else {
 				this.SY = Math.random()*10-5;
@@ -263,12 +271,12 @@
 			this.X += this.SX-(canvas.width/2-targetPos.x)/50;
 			this.Y += this.SY-(canvas.height/2-targetPos.y)/50;
 
-			this.SX += (this.SX-(canvas.width/2-targetPos.x)/50) / (100 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-targetPos.y)/50) / (100 / acceleration);
+			this.SX += (this.SX-(canvas.width/2-targetPos.x)/50) / (20 / acceleration);
+			this.SY += (this.SY-(canvas.height/2-targetPos.y)/50) / (20 / acceleration);
 
 			this.age++;
 
-			if (this.age%3==0) {
+			if (this.age) {
 				this.W++;
 				this.H++;
 			}
@@ -382,17 +390,19 @@
 				    canvas.width = window.innerWidth;
 				if (canvas.height != window.innerHeight)
 					canvas.height = window.innerHeight;
-
+				ctx.beginPath();
 				ctx.fillStyle = "rgba("+ backgroundColor + ",.5)";
 				ctx.fillRect(0,0, canvas.width,canvas.height);
+				ctx.closePath();
 
 				if (onPlanet == true) {
 					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
-					if (cloudHeight < -2) {cloudHeight = -2};
-					if (cloudHeight > .2) {
-						ctx.fillStyle = "rgba(0,0,0,1)";
-						ctx.fillRect(0,0, canvas.width,((cloudHeight-.2)*20)-8);
-					};
+					if (cloudHeight < -2.5) {cloudHeight = -2.5};
+					if (cloudHeight > 2) {cloudHeight = 2};
+					
+						ctx.fillStyle = "rgba(155,155,255,1)";
+						ctx.fillRect(0,0, canvas.width,((canvas.height/2 + 20) + (cloudHeight*100)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration)));
+					
 				};
 				
 				for (var i = numStars; i < starsToDraw; i++) {
@@ -440,20 +450,19 @@
 
 				
 
-				ctx.beginPath();
-				ctx.lineWidth=1;
-				ctx.strokeStyle = '#ffffff';
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(0,canvas.height);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(0,0);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(canvas.width,canvas.height);
-				ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
-				ctx.lineTo(canvas.width,0);
-				ctx.stroke();
-
-		    	ctx.closePath();
+				// ctx.beginPath();
+				// ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				// ctx.lineTo(0,canvas.height);
+				// ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				// ctx.lineTo(0,0);
+				// ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				// ctx.lineTo(canvas.width,canvas.height);
+				// ctx.moveTo(canvas.width-targetPos.x,canvas.height-targetPos.y);
+				// ctx.lineTo(canvas.width,0);
+				// ctx.lineWidth=1;
+				// ctx.strokeStyle = '#ffffff';
+				// ctx.stroke();
+				// ctx.closePath();
 
 		    }
 
