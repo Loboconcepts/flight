@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.021 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.022 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -82,13 +82,13 @@
 		var acceleration = 1;
 		var starsToDraw = (canvas.width * canvas.height) / 5000;
 		var planetsToDraw = false;
-		var cloudsToDraw = 0;
+		var cloudsToDraw = 30;
 		// (canvas.width * canvas.height) / 500
 		var groundsToDraw = 0;
 		var backgroundColor = "0,0,0";
 		var cloudHeight = -2.5;
-		var randomClouds = true;
-		var onPlanet = false;
+		var randomClouds = false;
+		var onPlanet = true;
 		var planetColor = "0,0,0";
 		var skyTransparency = 1;
 
@@ -432,7 +432,7 @@
 						
 					};
 					if (cloudHeight>1.9){
-						skyTransparency = 2/cloudHeight;
+						skyTransparency = 1.44-.2176*cloudHeight;
 					};
 					if (cloudHeight > 1.85 && cloudHeight < 1.9 ) {
 						backgroundColor = planetColor;
