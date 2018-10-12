@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.019 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.021 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -86,8 +86,11 @@
 		// (canvas.width * canvas.height) / 500
 		var groundsToDraw = 0;
 		var backgroundColor = "0,0,0";
+		var cloudHeight = -2.5;
+		var randomClouds = true;
 		var onPlanet = false;
-		var inAtmosphere = false;
+		var planetColor = "0,0,0";
+		var skyTransparency = 1;
 
 		function randomColor() {
 			var colorArray = [];
@@ -226,6 +229,7 @@
 				delete planets[this.ID];
 				numPlanets--;
 				onPlanet=true;
+				planetColor = this.C;
 				backgroundColor = this.C;
 				starsToDraw = 0;
 				stars = {};
@@ -238,9 +242,7 @@
 			ctx.fill();
 			ctx.closePath();
 		};
-		
-		var cloudHeight = -2.5;
-		var randomClouds = true;
+
 		function Cloud() {
 			this.X = canvas.width/2;
 			this.Y = canvas.height/2;
@@ -280,7 +282,7 @@
 			this.Y += this.SY-(canvas.height/2-targetPos.y)/50;
 
 			this.SX += (this.SX-(canvas.width/2-targetPos.x)/50) / (20 / acceleration);
-			this.SY += (this.SY-(canvas.height/2-targetPos.y)/50) / (20 / acceleration);
+			this.SY += (this.SY-(canvas.height/2 - (cloudHeight*canvas.height))/50) / (20 / acceleration);
 
 			this.age++;
 
@@ -415,16 +417,28 @@
 				}
 
 				if (onPlanet == true) {
+					
 					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
 					if (cloudHeight < -2.5) {cloudHeight = -2.5};
 					
 					
-					ctx.fillStyle = "rgba(155,155,255,1)";
-					ctx.fillRect(0,((cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration))-(canvas.height/2 + 20), canvas.width,canvas.height+40);
+					ctx.fillStyle = "rgba(155,155,255,"+skyTransparency+")";
+					ctx.fillRect(0,0, canvas.width,((canvas.height/2 + 20) + (cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration)));
+					// ((cloudHeight*canvas.height/4)-(canvas.height/2-targetPos.y)/50 / (20 / acceleration))-(canvas.height/2 + 20)
 
-					if (cloudHeight > 1.8) {
+					if (cloudHeight > 1.9 && cloudHeight < 1.99) {
 						backgroundColor = "0,0,0";
 						starsToDraw = (canvas.width * canvas.height) / 5000;
+						
+					};
+					if (cloudHeight>1.9){
+						skyTransparency = 2/cloudHeight;
+					};
+					if (cloudHeight > 1.85 && cloudHeight < 1.9 ) {
+						backgroundColor = planetColor;
+						starsToDraw = 0;
+						stars = {};
+						numStars = 0;
 					};
 
 					if (cloudHeight > 6.5) {
