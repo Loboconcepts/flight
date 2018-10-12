@@ -432,7 +432,7 @@
 						
 					};
 					if (cloudHeight>1.9){
-						skyTransparency = 1.44-.2176*cloudHeight;
+						skyTransparency = 1.731-.385*cloudHeight;
 					};
 					if (cloudHeight > 1.85 && cloudHeight < 1.9 ) {
 						backgroundColor = planetColor;
@@ -441,7 +441,7 @@
 						numStars = 0;
 					};
 
-					if (cloudHeight > 6.5) {
+					if (cloudHeight > 4.5) {
 						onPlanet = false;
 						cloudHeight = -2.5;
 						skyTransparency = 1;
