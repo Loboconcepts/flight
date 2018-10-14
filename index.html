@@ -82,13 +82,13 @@
 		var acceleration = 1;
 		var starsToDraw = (canvas.width * canvas.height) / 5000;
 		var planetsToDraw = false;
-		var cloudsToDraw = 0;
+		var cloudsToDraw = 30;
 		// (canvas.width * canvas.height) / 500
 		var groundsToDraw = 0;
 		var backgroundColor = "0,0,0";
 		var cloudHeight = -2.5;
-		var randomClouds = true;
-		var onPlanet = false;
+		var randomClouds = false;
+		var onPlanet = true;
 		var planetColor = "0,0,0";
 		var skyTransparency = 1;
 
@@ -418,7 +418,7 @@
 
 				if (onPlanet == true) {
 					
-					cloudHeight = cloudHeight + (Math.ceil((targetPos.y/canvas.height)*10)-5)/500
+					cloudHeight = cloudHeight - (Math.ceil((canvas.height/2-targetPos.y)/50))/canvas.height
 					if (cloudHeight < -2.5) {cloudHeight = -2.5};
 					
 					
