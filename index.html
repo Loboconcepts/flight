@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.022 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
+	<div onmouseup="clearInterval(go)" style="position:absolute;background-color:#ffffff;color:#000000;font-size:12px;">v:0.023 <span style="background-color:#ffffff;color:#000000;font-size:12px;" id="debugInfo"></span></div>
 	<canvas id="canvas" width="400" height="300">
     This text is displayed if your browser does not support HTML5 Canvas.
    </canvas>
@@ -401,7 +401,7 @@
 				if (canvas.height != window.innerHeight)
 					canvas.height = window.innerHeight;
 				ctx.beginPath();
-				ctx.fillStyle = "rgba("+ backgroundColor + ",.5)";
+				ctx.fillStyle = "rgba("+ backgroundColor + ",.02)";
 				ctx.fillRect(0,0, canvas.width,canvas.height);
 				ctx.closePath();
 
